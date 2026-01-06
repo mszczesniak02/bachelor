@@ -16,7 +16,6 @@ from src.segmentation.common.hparams import *
 
 
 def create_dir_structure(base_path):
-    """Creates the standard YOLOv8 directory structure."""
     dirs = [
         os.path.join(base_path, 'images', 'train'),
         os.path.join(base_path, 'images', 'val'),
@@ -29,14 +28,7 @@ def create_dir_structure(base_path):
 
 
 def mask_to_yolo_polygon(mask, normalize=True):
-    """
-    Converts a binary mask to YOLO polygon format.
-    Args:
-        mask: Binary mask numpy array.
-        normalize: Whether to normalize coordinates to [0, 1].
-    Returns:
-        List of polygon strings in format "class_id x1 y1 x2 y2 ...".
-    """
+
     h, w = mask.shape
     contours, _ = cv2.findContours(
         mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -73,9 +65,7 @@ def mask_to_yolo_polygon(mask, normalize=True):
 
 
 def process_dataset(img_dir, mask_dir, output_img_dir, output_label_dir):
-    """
-    Processes images and masks, converting them to YOLO format.
-    """
+
     print(f"Processing data from {img_dir} to {output_img_dir}...")
 
     valid_extensions = ('.jpg', '.png', '.jpeg', '.bmp')
@@ -137,38 +127,16 @@ def create_dataset_yaml(output_dir):
 
 
 def main():
-    # Paths from hparams
-    # Resolve relative paths in hparams relative to THIS script location logic if needed,
-    # but hparams usually has absolute or relative-to-root paths.
-    # Note: hparams.py provided paths like "../../../../datasets/..." which are relative to hparams.py location potentially.
-    # Let's trust python import to resolve constants, but we need to ensure we run this script from correct context or handle paths.
-
-    # We will assume hparams paths are relative to the project root or are valid absolute paths.
-    # If they are relative like "../../../", we need to be careful.
-
-    # Let's make paths absolute based on hparams location if they are relative
-    # The hparams file is in src/segmentation/common/
 
     # src/segmentation/yolo_8_seg/datasets_prepair
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(current_dir, '../../../../'))
+    # src/segmentation/yolo_8_seg/datasets_prepair
+    # Path resolution is handled in hparams.py (PROJECT_ROOT is absolute)
 
-    # Helper to resolve path
-    def resolve_path(path):
-        if os.path.isabs(path):
-            return path
-        # Assume path is relative to src/segmentation/common/hparams.py or project root?
-        # looking at hparams, it uses "../../../../datasets", which implies it is relative to src/segmentation/common/
-        # so let's resolve it relative to src/segmentation/common
-        hparams_dir = os.path.join(
-            project_root, 'src', 'segmentation', 'common')
-        return os.path.abspath(os.path.join(hparams_dir, path))
-
-    train_img_dir = resolve_path(IMG_TRAIN_PATH)
-    train_mask_dir = resolve_path(MASK_TRAIN_PATH)
-    val_img_dir = resolve_path(IMG_TEST_PATH)
-    val_mask_dir = resolve_path(MASK_TEST_PATH)
-    output_dir = resolve_path(YOLO_DATASET_DIR)
+    train_img_dir = IMG_TRAIN_PATH
+    train_mask_dir = MASK_TRAIN_PATH
+    val_img_dir = IMG_TEST_PATH
+    val_mask_dir = MASK_TEST_PATH
+    output_dir = YOLO_DATASET_DIR
 
     print(f"Dataset Prep Configuration:")
     print(f"  Train Images: {train_img_dir}")

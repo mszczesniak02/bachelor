@@ -44,16 +44,7 @@ def tune_single_model(bsize, lr, epochs, device=DEVICE, model_size=YOLO_MODEL_SI
         save=False   # Don't save final models to save space during tuning, unless desired
     )
 
-    # Get metrics
-    # Ultralytics returns a metrics object after training, or we can read from results.csv
-    # The 'train' method returns a Results object? No, it returns None or path usually.
-    # Actually, model.train() returns None in some versions, but let's check validation metrics.
-
     metrics = model.val(split='val')
-
-    # metrics.box.map    # map50-95
-    # metrics.seg.map    # map50-95
-    # metrics.seg.map50  # map50
 
     best_map = metrics.seg.map
     print(f"--- Result: mAP50-95 = {best_map:.4f} ---")

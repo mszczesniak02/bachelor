@@ -20,16 +20,14 @@ import numpy as np
 # autopep8: off
 
 
-model_path_full_ds = "/home/krzeslaav/Projects/bachlor/model_tests/FULL_DATASET/model_unet_0.5960555357910763.pth"
-model_path_only_DeepCrack = "/home/krzeslaav/Projects/bachlor/model_tests/ONLY_DEEPCRACK/model_unet_0.7051329215367635.pth"
-
 def main():
+    model_path = os.path.join(PROJECT_ROOT, "models/unet.pth")
 
-    model = model_load("unet", filepath=model_path_full_ds)
+    model = model_load("unet", filepath=model_path)
     model.eval()
 
-    dataset = dataset_get(img_path="../../../../datasets/dataset_segmentation/test_img/",
-                          mask_path="../../../../datasets/dataset_segmentation/test_lab/", transform=val_transform)
+    dataset = dataset_get(img_path=IMG_TEST_PATH,
+                          mask_path=MASK_TEST_PATH, transform=val_transform)
 
     magic = 1
 

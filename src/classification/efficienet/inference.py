@@ -71,7 +71,7 @@ def predict_single(model, image_path, device, transform):
     return predicted_class, confidence
 
 def visualize_grid_by_class(model, dataset, device, class_names):
-   
+
     transform = get_transform(device)
 
     # Get samples
@@ -132,7 +132,7 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model_name = "efficienet"
-    model_path = "/home/krzeslaav/Projects/bachlor/model_tests/FULL_DATASET/classification/newer/efficientnet/efficientnet_f1_0.9134_epoch15.pth"
+    model_path = os.path.join(PROJECT_ROOT, "models/efficientnet.pth")
 
     # Load dataset structure only
     test_dataset = dataset_get(TEST_DIR, image_size=IMAGE_SIZE, is_training=False)

@@ -23,32 +23,10 @@ except ImportError:
         # Adjusted to match the new classification paths' relative root
         os.path.dirname(__file__), "../../"))
 
-    # Segmentation paths
-    MASK_TRAIN_PATH = os.path.join(
-        PROJECT_ROOT, "datasets/dataset_segmentation/train_lab")
-    IMG_TRAIN_PATH = os.path.join(
-        PROJECT_ROOT, "datasets/dataset_segmentation/train_img")
-    MASK_TEST_PATH = os.path.join(
-        PROJECT_ROOT, "datasets/dataset_segmentation/test_lab")
-    IMG_TEST_PATH = os.path.join(
-        PROJECT_ROOT, "datasets/dataset_segmentation/test_img")
-
-    YOLO_DATASET_DIR = os.path.join(PROJECT_ROOT, "datasets/yolo_seg_data")
-
-    UNET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
-    UNET_MODEL_TRAIN_LOG_DIR = os.path.join(
-        # Adjusted to use PROJECT_ROOT
-        PROJECT_ROOT, "assets/training_logs/segmentation/unet/")
-
-    SEGFORMER_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
-    SEGFORMER_MODEL_TRAIN_LOG_DIR = os.path.join(
-        # Adjusted to use PROJECT_ROOT
-        PROJECT_ROOT, "assets/training_logs/segmentation/segformer/")
-
     # Classification paths (updated)
-    TRAIN_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/train/")
-    TEST_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/test/")
-    VAL_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/val/")
+    TRAIN_DIR = os.path.join(PROJECT_ROOT, "datasets/dataset_classification/train/")
+    TEST_DIR = os.path.join(PROJECT_ROOT, "datasets/dataset_classification/test/")
+    VAL_DIR = os.path.join(PROJECT_ROOT, "datasets/dataset_classification/val/")
 
     MODEL_DIR = os.path.join(PROJECT_ROOT, "models/")
     # Adjusted to use PROJECT_ROOT

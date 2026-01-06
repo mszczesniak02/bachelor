@@ -20,16 +20,14 @@ import numpy as np
 # autopep8: off
 
 
-model_path_only_DeepCrack = r"/home/krzeslaav/Projects/bachlor/model_tests/ONLY_DEEPCRACK/segformermodel_segformer_0.647862974802653.pth"
-model_path_full_ds = r"/home/krzeslaav/Projects/bachlor/model_tests/FULL_DATASET/segformermodel_segformer_0.5864474233337809.pth"
-
 def main():
+    model_path = os.path.join(PROJECT_ROOT, "models/segformer.pth")
 
-    model = model_load("segformer", filepath=model_path_only_DeepCrack)
+    model = model_load("segformer", filepath=model_path)
     model.eval()
 
-    dataset = dataset_get(img_path="../../../../datasets/dataset_segmentation/test_img/",
-                          mask_path="../../../../datasets/dataset_segmentation/test_lab/", transform=val_transform)
+    dataset = dataset_get(img_path=IMG_TEST_PATH,
+                          mask_path=MASK_TEST_PATH, transform=val_transform)
 
     magic = 4
 

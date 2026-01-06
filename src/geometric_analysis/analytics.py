@@ -15,17 +15,12 @@ from PIL import Image
 
 
 def preprocess_mask(mask_input, threshold: float = 0.5, min_size: int = 50, hole_threshold: int = 30) -> np.ndarray:
-    """
-    Ensures mask is binary and performs morphological cleanup (noise removal, hole filling, closing).
-    Accepts mask_input as numpy array or file path.
-    """
+
     if isinstance(mask_input, str):
         if not os.path.exists(mask_input):
             raise FileNotFoundError(f"Mask file not found: {mask_input}")
-        # Load as grayscale using cv2
         mask = cv2.imread(mask_input, cv2.IMREAD_GRAYSCALE)
         if mask is None:
-            # Try via PIL if cv2 fails or for other formats
             try:
                 mask = np.array(Image.open(mask_input).convert('L'))
             except Exception:
@@ -35,30 +30,20 @@ def preprocess_mask(mask_input, threshold: float = 0.5, min_size: int = 50, hole
     else:
         mask = mask_input
 
-    # Normalize if needed (0-255 to 0-1)
     if mask.max() > 1:
         mask = mask / 255.0
 
     binary_mask = mask > threshold
 
-    # Morphological cleanup
-    # 1. Remove small artifacts (noise)
     mask_clean = remove_small_objects(binary_mask, min_size=min_size)
 
-    # 2. Fill small holes
     mask_filled = remove_small_holes(mask_clean, area_threshold=hole_threshold)
-
-    # 3. Close gaps (optional, small kernel)
-    # Using a small 3x3 footprint for closing
     mask_closed = closing(mask_filled, footprint=np.ones((3, 3)))
 
     return mask_closed.astype(bool)
 
 
 def calculate_basic_properties(binary_mask: np.ndarray):
-    """
-    Calculates basic region properties like area, perimeter, eccentricity, etc.
-    """
     label_img = measure.label(binary_mask)
     regions = measure.regionprops(label_img)
 
@@ -100,8 +85,6 @@ def calculate_basic_properties(binary_mask: np.ndarray):
     else:
         results["aspect_ratio"] = 0
 
-    # Feret diameter requires convex hull which might not be computed by default in all versions,
-    # but feret_diameter_max is standard in recent skimage
     try:
         results["feret_diameter_max"] = largest_region.feret_diameter_max
     except AttributeError:
@@ -115,41 +98,19 @@ def calculate_basic_properties(binary_mask: np.ndarray):
 
 
 def get_skeleton(binary_mask: np.ndarray) -> np.ndarray:
-    """
-    Returns the skeleton of the binary mask.
-    """
+
     return skeletonize(binary_mask)
 
 
 def calculate_length(skeleton: np.ndarray) -> float:
-    """
-    Calculates the length of the crack based on the skeleton pixels.
-    This is a rough approximation (pixel count). For more precision, we could correct for connectivity.
-    """
+
     return np.sum(skeleton)
 
 
 def calculate_width(binary_mask: np.ndarray, skeleton: np.ndarray):
-    """
-    Calculates width by using distance transform on the binary mask 
-    and sampling it at the skeleton coordinates.
-    Since skeleton is the medial axis, distance transform values there represent half-width.
-    """
-    # Distance transform: distance to nearest zero (background)
-    # We want distance from skeleton to edge of crack.
-    # In binary mask, 1 is crack, 0 is background.
-    # ndimage.distance_transform_edt calculates distance to nearest background pixel.
-    # So at center (skeleton), value is radius (half-width).
 
     dist_transform = ndimage.distance_transform_edt(binary_mask)
-
-    # Get coordinates of skeleton points
     skeleton_coords = np.argwhere(skeleton)  # [N, 2] -> (y, x)
-
-    # Filter distances only at skeleton points
-    # Diameter = 2 * Radius
-    # We can index directly using the boolean mask or coordinates
-    # Using coords ensures we match index 1-to-1 with location
     if len(skeleton_coords) == 0:
         return {
             "mean_width": 0.0,
@@ -186,13 +147,7 @@ def calculate_width(binary_mask: np.ndarray, skeleton: np.ndarray):
 
 
 def calculate_advanced_metrics(skeleton: np.ndarray, binary_mask: np.ndarray):
-    """
-    Analiza zaawansowana: krętość, punkty rozgałęzień i wymiar fraktalny.
-    """
-    # 1. Detekcja punktów rozgałęzień (Branch Points) i końcowych (Endpoints)
-    # Używamy jądra 3x3 do liczenia sąsiadów w szkielecie
 
-    # Prostsza metoda: liczenie sąsiadów (8-connectivity)
     neighbor_kernel = np.array([[1, 1, 1],
                                 [1, 0, 1],
                                 [1, 1, 1]])
@@ -201,35 +156,17 @@ def calculate_advanced_metrics(skeleton: np.ndarray, binary_mask: np.ndarray):
         int), neighbor_kernel, mode='constant', cval=0)
     skeleton_neighbors = neighbors * skeleton
 
-    # Endpoints have exactly 1 neighbor (excluding self) - but convolution includes self if center is 1?
-    # Center is 1 (if skeleton pixel).
-    # With this kernel, a single pixel (isolated) has convolution sum 0? No, checking logic.
-    # If center is 1, neighbor sum includes center if kernel center is 1?
-    # Wait, the provided snippet kernel has 0 at center in 'neighbor_kernel'.
-    # Kernel: [[1,1,1],[1,0,1],[1,1,1]]. Center weight 0.
-    # So convolution sum is exactly number of neighbors.
-
     endpoints = np.sum(skeleton_neighbors == 1)
     branch_points = np.sum(skeleton_neighbors > 2)
 
-    # 2. Tortuosity (Krętość)
-    # Przybliżenie: długość szkieletu / odległość euklidesowa skrajnych punktów
     coords = np.column_stack(np.where(skeleton))
     if len(coords) > 1:
-        # Znalezienie dwóch najbardziej oddalonych punktów (uproszczenie)
-        # This is n^2 complexity, might be slow for huge skeletons.
-        # Approximation: find bounding box corners or PCA could be faster, but for normal crack images n^2 on skeleton points is okayish (skeleton is sparse).
-        # Actually, let's just pick first and last in list as approximation if order is somehow linear? Skimage skeleton doesn't guarantee order.
-        # Let's stick to provided code logic: dist_matrix between 0 and -1 of coords array.
-        # Since coords are just np.where order (row major), 0 and -1 are top-left-most and bottom-right-most pixels.
-        # This is a decent heuristic for "ends" of the structure.
         dist_euclid = np.linalg.norm(coords[0] - coords[-1])
         skeleton_length = np.sum(skeleton)
         tortuosity = skeleton_length / dist_euclid if dist_euclid > 0 else 1.0
     else:
         tortuosity = 1.0
 
-    # 3. Fractal Dimension (Minkowski–Bouligand dimension) - uproszczony box-counting
     def box_count(img, k):
         S = np.add.reduceat(
             np.add.reduceat(img, np.arange(0, img.shape[0], k), axis=0),
@@ -365,7 +302,6 @@ def visualize_analysis(image, mask: np.ndarray, skeleton: np.ndarray, dist_map: 
     if save_path:
         plt.savefig(save_path)
         print(f"Analysis visualization saved to {save_path}")
-    # plt.show() # Return figure object or show interactive if needed, but in pipeline better to save or return fig
 
 
 if __name__ == "__main__":
@@ -379,9 +315,6 @@ if __name__ == "__main__":
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        # Create a dummy mask using simple thresholding (inverse, assuming dark cracks)
-        # This is just for testing the analytics module standalone.
-        # cracks are dark -> < threshold
         _, mask_thresh = cv2.threshold(
             img_gray, 80, 255, cv2.THRESH_BINARY_INV)
         mask_thresh = mask_thresh > 0  # make boolean

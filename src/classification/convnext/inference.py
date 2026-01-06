@@ -134,7 +134,7 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     model_name = "convnet"
-    model_path = "~/Projects/bachlor/model_tests/FULL_DATASET/classification/newer/convnext/convnext.pth"
+    model_path = os.path.join(PROJECT_ROOT, "models/convnext.pth")
 
     # Load dataset structure only
     test_dataset = dataset_get(TEST_DIR, image_size=IMAGE_SIZE, is_training=False)

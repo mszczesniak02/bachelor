@@ -10,7 +10,10 @@ W celu analizy procesu uczenia modeli należy pobrać archiwum z logami.
 ## Uruchomienie TensorBoard
 Aby wyświetlić wykresy i metryki treningowe, należy użyć narzędzia TensorBoard.
 
-1. Aktywuj środowisko wirtualne Python (jeśli jest używane).
+1. Aktywuj środowisko wirtualne Python.
+   ```bash
+   source venv/bin/activate
+   ```
 2. Przejdź do katalogu z logami:
    ```bash
    cd assets/training_logs

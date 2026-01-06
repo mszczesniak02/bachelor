@@ -13,13 +13,7 @@ import gc
 
 
 def plot_confusion_matrix(cm, class_names):
-    """
-    Returns a matplotlib figure containing the plotted confusion matrix.
 
-    Args:
-        cm (array, shape = [n, n]): a confusion matrix of integer classes
-        class_names (array, shape = [n]): String names of the integer classes
-    """
     figure = plt.figure(figsize=(8, 8))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False,
                 xticklabels=class_names, yticklabels=class_names)
@@ -40,9 +34,6 @@ def seed_everything(seed=42):
 
 
 def utils_cuda_clear():
-    """
-    Clear the leftover memory from COLAB training model
-    """
 
     print("Clearning memory...", end="")
     empty_cache()
@@ -52,9 +43,7 @@ def utils_cuda_clear():
 
 
 def plot_effect(image, mask, effect=[], effect_title="Transform"):
-    """
-    Plots 2 images if no effect is passed.
-    """
+
     if len(effect) != 0:
         fig, ax = plt.subplots(1, 3)
         ax[0].imshow(image, cmap="gray")
@@ -74,10 +63,7 @@ def plot_effect(image, mask, effect=[], effect_title="Transform"):
 
 
 def np2ten(img: np.array) -> torch.tensor:
-    """
-    Numpy array to torch tensor
-    Used for inference and cleanup
-    """
+
     if len(img.shape) == 2:
         # Jeśli grayscale, dodaj wymiar kanału
         img = np.expand_dims(img, axis=-1)
@@ -92,10 +78,7 @@ def np2ten(img: np.array) -> torch.tensor:
 
 
 def ten2np(img: torch.Tensor, denormalize: bool = False) -> np.array:
-    """
-    Torch tensor to numpy array
-    Used for inference and cleanup
-    """
+
     # Usuń batch dimension jeśli istnieje
     if len(img.shape) == 4:
         img = img.squeeze(0)  # [1, C, H, W] -> [C, H, W]
@@ -124,9 +107,7 @@ def ten2np(img: torch.Tensor, denormalize: bool = False) -> np.array:
 
 
 def visualize_model_output(image, mask_gt, mask_pred, save_path=None):
-    """
-    Visualizes original image, ground truth mask, predicted probability map (heatmap), and overlay.
-    """
+
     fig, axes = plt.subplots(1, 4, figsize=(20, 5))
 
     # 1. Original
