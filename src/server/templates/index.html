@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizator Obrazów</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>System analizy pęknięć powierzchni budowlanych na podstawie analizy obrazów</h1>
+        <p class="subtitle">Prześlij obraz, aby otrzymać szczegółowe informacje</p>
+
+        <form id="uploadForm">
+            <div class="upload-area" id="uploadArea">
+                <!-- Icon removed -->
+                <div class="upload-text">Kliknij lub przeciągnij obraz tutaj</div>
+                <div class="upload-hint">PNG, JPG, JPEG, BMP, GIF (max 50MB)</div>
+                <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif">
+            </div>
+            <button type="submit" id="analyzeBtn" style="display: none;">Analizuj Obraz</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Przetwarzanie...</div>
+        </div>
+
+        <div class="error" id="error"></div>
+
+
+        <div class="result" id="result">
+            <div class="result-title">Wyniki Analizy</div>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
