@@ -1,49 +1,54 @@
-# Praca Inżynierska
+# System Analizy Pęknięć Powierzchni Budowlanych - Praca Inżynierska
 
-Praca przedstawia projekt i implementację zintegrowanego systemu analizy pęknięć powierzchni budowlanych, wykorzystującego metody komputerowego przetwarzania obrazu oraz uczenia maszynowego. Głównym celem pracy jest automatyzacja procesu inspekcji technicznej poprzez zastosowanie technik uczenia zespołowego (Ensemble Learning) w celu redukcji wariancji błędu pojedynczych estymatorów. Architektura systemu opiera się na czteroelementowym potoku przetwarzania. Pierwszy etap stanowi Kontroler Domeny, realizowany przez autorską konwolucyjną sieć neuronową (CNN), filtrującą obrazy niezawierające uszkodzeń. Etap segmentacji wykorzystuje fuzję wyników modeli U-Net, SegFormer oraz YOLOv8-seg przy użyciu metody głosowania miękkiego (soft-voting). Klasyfikacja stopnia degradacji (włosowe, małe, średnie, duże) realizowana jest przez zespół sieci EfficientNet-B0 oraz ConvNeXt. Ostatni moduł wykonuje analizę geometryczną (długość, szerokość, pole powierzchni, krętość) z wykorzystaniem algorytmów szkieletyzacji oraz Euklidesowej Transformaty Odległościowej (EDT). Rozwiązanie zaimplementowano w języku Python z użyciem biblioteki PyTorch i środowiska CUDA, a interfejs użytkownika opracowano w architekturze klient-serwer przy użyciu frameworka Flask. Przeprowadzone badania wykazały, że zastosowanie podejścia hybrydowego zwiększa precyzję detekcji oraz stabilność predykcji względem pojedynczych architektur referencyjnych (SOTA).
+## Abstrakt
+Praca przedstawia projekt i implementację zintegrowanego systemu analizy pęknięć powierzchni budowlanych, wykorzystującego metody komputerowego przetwarzania obrazu oraz uczenia maszynowego. Głównym celem pracy jest automatyzacja procesu inspekcji technicznej poprzez zastosowanie technik uczenia zespołowego (Ensemble Learning) w celu redukcji wariancji błędu pojedynczych estymatorów.
 
-## Instalacja i Uruchomienie
+Architektura systemu opiera się na czteroelementowym potoku przetwarzania:
+1. **Kontroler Domeny**: Autorska sieć CNN filtrująca obrazy bez uszkodzeń.
+2. **Segmentacja**: Fuzja wyników (U-Net, SegFormer, YOLOv8-seg) metodą Soft-Voting.
+3. **Klasyfikacja**: Zespół sieci (EfficientNet-B0, ConvNeXt) określający stopień degradacji.
+4. **Analiza Geometryczna**: Obliczanie metryk (długość, szerokość, pole, krętość) algorytmami szkieletyzacji i EDT.
 
-Aby projekt działał poprawnie, należy utworzyć odpowiednie środowisko Python (zalecane wirtualne środowisko) i zainstalować wymagane biblioteki.
+System zaimplementowano w Pythonie (PyTorch, CUDA), a interfejs użytkownika w architekturze klient-serwer (Flask). Badania wykazały, że podejście hybrydowe przewyższa skutecznością pojedyncze rozwiązania SOTA.
+
+## Instalacja i Konfiguracja
+
+Aby uruchomić projekt, należy przygotować środowisko Python oraz zainstalować zależności.
 
 ```bash
-# Utworzenie wirtualnego środowiska
+# 1. Tworzenie wirtualnego środowiska (zalecane)
 python3 -m venv venv
 source venv/bin/activate
 
-# Instalacja zależności
+# 2. Instalacja wymaganych bibliotek
 pip install -r requirements.txt
 ```
 
-### Zmiana lokalizacji plików modeli
-W przypadku zmiany lokalizacji plików modeli należy edytować plik `src/final_prediction_pipeline/prediction.py` oraz zmienić parametr ścieżek dostępu (zmienne 
-SEGFORMER_PATH,UNET_PATH,YOLO_PATH itp.).
-Podobnie należy zmienić parametry ścieżek w przypadku zmiany lokalizacji danych (zdjęć testowych) oraz inferencji pojedynczych modeli (pliki hparams.py).
+### Konfiguracja Ścieżek
+Domyślna konfiguracja zakłada standardową strukturę katalogów. W przypadku zmiany lokalizacji modeli lub danych:
+- **Modele**: Edytuj `src/final_prediction_pipeline/prediction.py` i zaktualizuj zmienne `SEGFORMER_PATH`, `UNET_PATH`, `YOLO_PATH` itp.
+- **Dane/Inferencja**: Zaktualizuj odpowiednie pliki `hparams.py` w podkatalogach modułów.
 
-### Uruchomienie Serwera
-Aby uruchomić interfejs webowy aplikacji:
+## Uruchomienie Aplikacji
+
+Aplikacja posiada interfejs webowy umożliwiający łatwą analizę zdjęć.
 
 ```bash
+# Uruchomienie serwera deweloperskiego
 python3 src/server/app.py
 ```
-Serwer będzie dostępny pod adresem: `http://localhost:5000`
 
-## Struktura Projektu
+Po uruchomieniu interfejs dostępny jest pod adresem: [http://localhost:5000](http://localhost:5000)
 
-### Kod Źródłowy (`src`)
-Główny kod źródłowy aplikacji i skrypty treningowe znajdują się w katalogu `src/`.
+## Struktura Projektu i Zasoby
 
-### Modele (`models`)
-Modele sieci neuronowych niezbędne do działania systemu znajdują się w katalogu `models/`.
-**Ważne:** Modele należy pobrać i rozpakować ręcznie. Szczegółowe instrukcje znajdują się w pliku [models/readme.md](models/readme.md).
+| Katalog | Opis | Zasoby (Wymagane pobranie) |
+| :--- | :--- | :--- |
+| `src/` | Kod źródłowy aplikacji i skrypty treningowe. | |
+| `models/` | Wagi wytrenowanych sieci neuronowych. | [Instrukcja i Pobieranie](models/readme.md) |
+| `datasets/` | Zbiory danych treningowych i testowych. | [Instrukcja i Pobieranie](datasets/readme.md) |
+| `assets/` | Materiały dodatkowe (paper, logi). | |
+| `assets/training_logs/` | Logi z procesu uczenia (TensorBoard). | [Instrukcja i Pobieranie](assets/training_logs/readme.md) |
 
-
-
-### Materiały Dodatkowe (`assets`)
-Folder `assets/` zawiera dodatkowe materiały, w tym pełny tekst pracy inżynierskiej (paper).
-
-#### Logi Treningowe
-W katalogu `assets/training_logs/` przechowywane są logi z procesu uczenia modeli.
-Instrukcja pobierania i obsługi logów znajduje się w pliku [assets/training_logs/readme.md](assets/training_logs/readme.md).
-
---
+---
+*Autor: [Twoje Imię/Nazwisko]*

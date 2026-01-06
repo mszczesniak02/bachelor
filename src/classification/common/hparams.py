@@ -18,18 +18,58 @@ try:
     CONVNEXT_MODEL_TRAIN_LOG_DIR = "/content/models_log/classification/convnext/"
 
 except ImportError:
-    DATA_DIR = "/home/krzeslaav/Projects/datasets"
-    TRAIN_DIR = os.path.join(DATA_DIR, "classification_width/train_img")
-    TEST_DIR = os.path.join(DATA_DIR, "classification_width/test_img")
+    # using local 2GB laptop :|
+    PROJECT_ROOT = os.path.abspath(os.path.join(
+        # Adjusted to match the new classification paths' relative root
+        os.path.dirname(__file__), "../../"))
+
+    # Segmentation paths
+    MASK_TRAIN_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/train_lab")
+    IMG_TRAIN_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/train_img")
+    MASK_TEST_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/test_lab")
+    IMG_TEST_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/test_img")
+
+    YOLO_DATASET_DIR = os.path.join(PROJECT_ROOT, "datasets/yolo_seg_data")
+
+    UNET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
+    UNET_MODEL_TRAIN_LOG_DIR = os.path.join(
+        PROJECT_ROOT, "models_log/segmentation/unet/")  # Adjusted to use PROJECT_ROOT
+
+    SEGFORMER_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
+    SEGFORMER_MODEL_TRAIN_LOG_DIR = os.path.join(
+        PROJECT_ROOT, "models_log/segmentation/segformer/")  # Adjusted to use PROJECT_ROOT
+
+    # Classification paths (updated)
+    TRAIN_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/train/")
+    TEST_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/test/")
+    VAL_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/val/")
+
+    MODEL_DIR = os.path.join(PROJECT_ROOT, "models/")
+    # Adjusted to use PROJECT_ROOT
+    LOG_DIR = os.path.join(PROJECT_ROOT, "models_log/entry_classificator/")
+
+    # Updated to use MODEL_DIR or PROJECT_ROOT
+    ENET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
+    ENET_MODEL_TRAIN_LOG_DIR = os.path.join(
+        # Adjusted to use PROJECT_ROOT
+        PROJECT_ROOT, "models_log/classification/efficienet/")
+
+    # Updated to use MODEL_DIR or PROJECT_ROOT
+    CONVNEXT_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
+    CONVNEXT_MODEL_TRAIN_LOG_DIR = os.path.join(
+        PROJECT_ROOT, "models_log/classification/convnext/")  # Adjusted to use PROJECT_ROOT
+
     DEVICE = "cuda"
     WORKERS = 4
     ON_COLAB = False
 
-    ENET_MODEL_TRAIN_DIR = "../../../models/classification/efficienet/"
-    ENET_MODEL_TRAIN_LOG_DIR = "../../../models_log/classification/efficienet/"
-
-    CONVNEXT_MODEL_TRAIN_DIR = "../../../models/classification/convnext/"
-    CONVNEXT_MODEL_TRAIN_LOG_DIR = "../../../models_log/classification/convnext/"
+    # Inference paths (adjusted for PROJECT_ROOT and corrected syntax)
+    MODEL_INFERENCE_DIR = os.path.join(PROJECT_ROOT, "models/")
+    MODEL_INFERENCE_PATH = os.path.join(MODEL_INFERENCE_DIR, "segformer.pth")
 
 
 # Common

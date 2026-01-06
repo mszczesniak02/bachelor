@@ -21,25 +21,33 @@ if ON_COLAB:
 
 else:
     # using local 2GB laptop :|
-    MASK_TRAIN_PATH = r"../../../../datasets/dataset_segmentation/train_lab"
-    IMG_TRAIN_PATH = r"../../../../datasets/dataset_segmentation/train_img"
-    MASK_TEST_PATH = r"../../../../datasets/dataset_segmentation/test_lab"
-    IMG_TEST_PATH = r"../../../../datasets/dataset_segmentation/test_img"
+    PROJECT_ROOT = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), "../../../"))
+    MASK_TRAIN_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/train_lab")
+    IMG_TRAIN_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/train_img")
+    MASK_TEST_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/test_lab")
+    IMG_TEST_PATH = os.path.join(
+        PROJECT_ROOT, "datasets/dataset_segmentation/test_img")
 
-    YOLO_DATASET_DIR = r"../../../../datasets/yolo_seg_data"
+    YOLO_DATASET_DIR = os.path.join(PROJECT_ROOT, "datasets/yolo_seg_data")
 
-    UNET_MODEL_TRAIN_DIR = r"../../../models/segmentation/unet/"
+    UNET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
     UNET_MODEL_TRAIN_LOG_DIR = r"../../../models_log/segmentation/unet/"
 
-    SEGFORMER_MODEL_TRAIN_DIR = r"../../../models/segmentation/segformer"
+    SEGFORMER_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
     SEGFORMER_MODEL_TRAIN_LOG_DIR = r"../../../models_log/segmentation/segformer/"
 
     DEVICE = "cuda"
     WORKERS = 4
 
 # DEVICE = "cpu"
-MODEL_INFERENCE_PATH = r"../../../model_tests/FULL_DATASET/segformermodel_segformer_0.5864474233337809.pth"
-MODEL_INFERENCE_DIR = r"../../../model_tests/FULL_DATASET/"
+MODEL_INFERENCE_PATH = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), "../../../models/segformer.pth"))
+MODEL_INFERENCE_DIR = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), "../../../models/"))
 
 
 # DEFAULT HYPER PARAMS

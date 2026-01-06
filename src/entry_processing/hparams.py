@@ -12,11 +12,13 @@ if ON_COLAB:
 
 else:
     DEVICE = "cuda"
-    TRAIN_DIR = "../../../datasets/entry_dataset/train/"
-    TEST_DIR = "../../../datasets/entry_dataset/test/"
-    VAL_DIR = "../../../datasets/entry_dataset/val/"
+    PROJECT_ROOT = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), "../../"))
+    TRAIN_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/train/")
+    TEST_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/test/")
+    VAL_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/val/")
 
-    MODEL_DIR = "../../models/entry_classificator/"
+    MODEL_DIR = os.path.join(PROJECT_ROOT, "models/")
     LOG_DIR = "../../../models_log/entry_classificator/"
     WORKERS = 4
 
