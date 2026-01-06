@@ -4,7 +4,7 @@ Katalog ten przeznaczony jest na dane służące do treningu oraz ewaluacji mode
 
 ## Pobieranie Danych
 
-1. Przejdź pod adres: [LINK DO DATASETÓW]("")
+1. Przejdź pod adres: [LINK DO DATASETÓW](https://drive.google.com/file/d/1vUMLnfKv2MvzBe_P0KVDVi0dX_SLtdJj/view?usp=sharing)
 2. Pobierz plik `datasets.zip`.
 3. Rozpakuj archiwum w katalogu `datasets/`.
 

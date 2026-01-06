@@ -3,7 +3,7 @@
 ## Pobieranie Danych
 W celu analizy procesu uczenia modeli należy pobrać archiwum z logami.
 
-1. Przejdź na stronę: [LINK DO DANYCH]("https://drive.google.com/file/d/1oNHk2cY6F8rapmSGEBRtuidnHzdy-gQh/view?usp=sharing")
+1. Przejdź na stronę: [LINK DO DANYCH](https://drive.google.com/file/d/1oNHk2cY6F8rapmSGEBRtuidnHzdy-gQh/view?usp=sharing)
 2. Pobierz plik `training_logs.zip`.
 3. Rozpakuj archiwum w katalogu `assets/training_logs`.
 
