@@ -10,7 +10,7 @@ Architektura systemu opiera się na czteroelementowym potoku przetwarzania:
 
 System zaimplementowano w Pythonie (PyTorch, CUDA), a interfejs użytkownika w architekturze klient-serwer (Flask). Badania wykazały, że podejście hybrydowe przewyższa skutecznością pojedyncze rozwiązania SOTA.
 
-W celu pobrania pracy naukowej należy przejść [Tutaj](assets/paper.pdf)
+W celu pobrania pracy naukowej należy przejść [Tutaj](assets/paper/paper.pdf)
 
 ## Instalacja i Konfiguracja
 
