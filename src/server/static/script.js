@@ -7,10 +7,7 @@ const error = document.getElementById('error');
 const result = document.getElementById('result');
 const resultContent = document.getElementById('resultContent');
 
-// Otwórz dialog przy kliknięciu
 uploadArea.addEventListener('click', () => fileInput.click());
-
-// Przeciąganie pliku
 uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadArea.classList.add('drag-over');
@@ -27,7 +24,6 @@ uploadArea.addEventListener('drop', (e) => {
     uploadForm.dispatchEvent(new Event('submit'));
 });
 
-// Zmiana pliku - pokaż preview wewnątrz upload-area
 fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -50,7 +46,6 @@ fileInput.addEventListener('change', (e) => {
     reader.readAsDataURL(file);
 });
 
-// Wysyłanie formularza
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
