@@ -50,4 +50,4 @@ Po uruchomieniu interfejs dostępny jest pod adresem: [http://localhost:5000](ht
 | `assets/training_logs/` | Logi z procesu uczenia (TensorBoard). | [Instrukcja i Pobieranie](assets/training_logs/readme.md) |
 
 ---
-*Autor: [Twoje Imię/Nazwisko]*
+*Autor: [Mateusz Szczęśniak]*
