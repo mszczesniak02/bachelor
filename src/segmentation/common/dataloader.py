@@ -51,35 +51,26 @@ class CrackDataset(Dataset):
         return len(self.images)
 
     def __getitem__(self, index):
-        # 1. Wczytanie obrazu (OpenCV)
-        # CV2 wczytuje jako BGR, konwertujemy na RGB
+     
         img_path = self.images[index]
         image = cv2.imread(img_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        # 2. Wczytanie maski (OpenCV)
-        # Wczytujemy w skali szarości (0-255)
+        
         mask_path = self.masks[index]
         mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
 
-        # 3. Binaryzacja (Robusta)
-        # Obsługa masek [0, 255] oraz [0, 1]
         max_val = mask.max()
         if max_val > 1:
             mask = mask / 255.0
 
         mask = (mask > 0.5).astype(np.float32)
 
-        # 4. Augmentacje (Albumentations)
         if self.transform:
             augmented = self.transform(image=image, mask=mask)
             image = augmented['image']
             mask = augmented['mask']
 
-        # 'image' jest już Tensorem dzięki ToTensorV2 i jest znormalizowany (A.Normalize)
-
-        # 'mask' wychodzi z Albumentations jako Tensor [H, W].
-        # PyTorch oczekuje [Channels, H, W], więc dodajemy wymiar (unsqueeze).
         mask = mask.float().unsqueeze(0)
 
         return image, mask
@@ -103,14 +94,11 @@ def dataloader_get(dataset, is_training=True, bsize=DEFAULT_BATCH_SIZE):
 
 
 def dataloader_init(batch_size: int = DEFAULT_BATCH_SIZE) -> tuple[DataLoader, DataLoader]:
-    """
-    Get dataloader setup for DeepCrack (train/test split based on folders).
-    """
-    # Zbiór treningowy z augmentacją
+  
+
     train_ds = dataset_get(img_path=IMG_TRAIN_PATH,
                            mask_path=MASK_TRAIN_PATH, transform=train_transform)
 
-    # Zbiór walidacyjny BEZ augmentacji (tylko resize/normalize)
     valid_ds = dataset_get(img_path=IMG_TEST_PATH,
                            mask_path=MASK_TEST_PATH, transform=val_transform)
 

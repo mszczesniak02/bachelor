@@ -15,7 +15,7 @@ matplotlib.use('Agg')
 # Try to find the dataset path
 POSSIBLE_PATHS = [
     r"/content/datasets/multi/train_lab",
-    r"/home/krzeslaav/Projects/datasets/dataset_segmentation/train_lab"
+    # r"/home/krzeslaav/Projects/datasets/dataset_segmentation/train_lab"
     # r"/content/datasets/DeepCrack/train_lab"
 ]
 
@@ -33,7 +33,7 @@ DATASET_ROOT = find_dataset_root()
 
 
 def calculate_max_width(mask_path):
-   
+
     img_pil = Image.open(mask_path).convert('L')
     img = np.array(img_pil)
     _, binary = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
@@ -148,10 +148,7 @@ def plot_class_distribution(counts, category_names, output_file="class_dist.png"
 
 
 def categorize_crack_width(width, thresholds):
-    """
-    Categorizes crack based on max width in pixels.
-    Categories: 1_wlosowe, 2_male, 3_srednie, 4_duze
-    """
+   
     if len(thresholds) != 3:
         thresholds = [8.0, 14.0, 26.0]
 
@@ -215,11 +212,10 @@ def create_categorized_dataset_width(mask_dir, output_base_dir, image_dir=None, 
             dest_path = os.path.join(
                 output_base_dir, category_names[cat_id], dest_name)
 
-           
             try:
                 with Image.open(src_file) as img:
                     img = img.convert('L')
-                    
+
                     img = img.point(lambda p: 255 if p > 127 else 0)
                     img = img.resize((256, 256), resample=Image.NEAREST)
                     img.save(dest_path)
@@ -268,7 +264,7 @@ def balance_dataset(dataset_dir, category_names):
         print(f"Augmenting {cat}: need {needed} more images...")
 
         cat_dir = os.path.join(dataset_dir, cat)
-        
+
         source_files = [f for f in file_lists[cat] if "_bal_" not in f]
 
         if not source_files:
@@ -324,10 +320,8 @@ def main():
         print(f"Checked paths: {POSSIBLE_PATHS}")
         return
 
-    # Define thresholds based on previous analysis
     thresholds = [8.0, 14.0, 26.0]
     print(f"Using Max Width Thresholds: {thresholds}")
-
 
     subsets = [
         {"name": "TRAIN", "mask_sub": "train_lab",
@@ -336,11 +330,9 @@ def main():
             "out_sub": "test_img", "balance": False}
     ]
 
-    # Check execution environment (Colab vs Local) to determine output root
     if DATASET_ROOT.startswith("/content"):
         OUTPUT_ROOT = r"/content/datasets/classification_width"
     else:
-        # Local: Create sibling directory to the input dataset
         parent_dir = os.path.dirname(DATASET_ROOT)
         OUTPUT_ROOT = os.path.join(parent_dir, "classification_width")
 
@@ -350,7 +342,7 @@ def main():
         print(f"\n{'='*20} PROCESSING {subset['name']} DATASET {'='*20}")
 
         mask_dir = os.path.join(DATASET_ROOT, subset["mask_sub"])
-       
+
         img_dir = None
         output_dir = os.path.join(OUTPUT_ROOT, subset["out_sub"])
         if os.path.exists(output_dir):

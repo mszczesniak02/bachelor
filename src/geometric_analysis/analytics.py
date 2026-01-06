@@ -218,10 +218,7 @@ def calculate_advanced_metrics(skeleton: np.ndarray, binary_mask: np.ndarray):
 
 
 def analyze_crack_mask(mask: np.ndarray, pixel_size_mm: float = None):
-    """
-    Main analysis function.
-    pixel_size_mm: if provided, converts pixels to physical units (mm).
-    """
+  
     binary_mask = preprocess_mask(mask)
 
     # 1. Basic Props
@@ -244,7 +241,6 @@ def analyze_crack_mask(mask: np.ndarray, pixel_size_mm: float = None):
         "width_stats": width_stats
     }
 
-    # Conversion if pixel size known
     if pixel_size_mm:
         analysis_results["length_mm"] = length_pixels * pixel_size_mm
         analysis_results["width_mean_mm"] = width_stats["mean_width"] * pixel_size_mm
@@ -257,10 +253,7 @@ def analyze_crack_mask(mask: np.ndarray, pixel_size_mm: float = None):
 
 
 def visualize_analysis(image, mask: np.ndarray, skeleton: np.ndarray, dist_map: np.ndarray, results: dict, save_path: str = None):
-    """
-    Plots the analysis results: Original, Skeleton on Mask, Width/Distance Map.
-    Accepts image as numpy array or file path (optional).
-    """
+  
     if isinstance(image, str) and os.path.exists(image):
         image = cv2.imread(image)
         if image is not None:

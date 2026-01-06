@@ -44,22 +44,15 @@ class CrackAnalysisPipeline:
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"Image not found: {image_path}")
 
-        # Use prediction's load_image logic which resizes to OUTPUT_IMAGE_SIZE
-        # But we might want to keep original size for final visualization?
-        # The models need 512x512 usually.
+        
         img_tensor, img_resized = prediction.load_image(image_path)
         img_tensor = img_tensor.to(self.device)
 
-        # Also load original for analytics overlay if we want high res?
-        # For now, working with the resized version used for inference is consistent.
-
+      
         return img_tensor, img_resized
 
     def run_domain_controller(self, img_tensor):
-        """
-        Determines if the image contains a crack or not.
-        Returns: is_crack (bool), confidence (float), label (str)
-        """
+       
         if self.domain_controller is None:
             return None, 0.0, "N/A"
 
@@ -83,11 +76,7 @@ class CrackAnalysisPipeline:
             return None, 0.0, "Error"
 
     def run_segmentation_ensemble(self, img_tensor, img_numpy):
-        """
-        Runs U-Net, SegFormer, YOLO and averages results.
-        Returns: binary_mask, final_mask (heatmap), masks_dict
-        """
-        # We can reuse logic from prediction.predict but tailored to return values
+     
 
         # Weights (hardcoded as in prediction.py)
         weights = {"unet": 1.0, "segformer": 1.0, "yolo": 1.0}
@@ -172,10 +161,7 @@ class CrackAnalysisPipeline:
         return binary_mask, final_mask, masks_dict
 
     def run_classification_ensemble(self, img_tensor, binary_mask):
-        """
-        Runs EfficientNet and ConvNeXt on the masked image.
-        Returns: category_idx, category_name, confidence
-        """
+       
         # If mask is empty, skip
         if np.sum(binary_mask) == 0:
             return -1, "No Crack Detected", 0.0
@@ -260,15 +246,11 @@ class CrackAnalysisPipeline:
             img_tensor, img_numpy)
         results['segmentation_completed'] = True
 
-        # VERIFICATION: If segmentation found nothing, override Domain Controller
         if np.sum(binary_mask) == 0:
             print(f"Segmentation found 0 pixels. Overriding DC result for {image_path}.")
             results['domain_controller']['is_crack'] = False
             results['domain_controller']['label'] = "No Crack"
-            # Confidence remains high that it Was a crack, but we override decision? 
-            # Or effectively say confidence of being a crack is now 0? 
-            # Let's simple keep it false so UI handles it.
-
+      
             results['segmentation_completed'] = False
             results['classification'] = None
             results['geometric_analysis'] = None
@@ -287,26 +269,20 @@ class CrackAnalysisPipeline:
             "confidence": class_conf
         }
 
-        # 5. Geometric Analysis
-        # Assuming pixel_size_mm is unknown or standard, passing None for now
-        # Creating a boolean mask for analytics
+        
         bool_mask = binary_mask > 0
         geo_results, skeleton, dist_map = analytics.analyze_crack_mask(
             bool_mask)
         results['geometric_analysis'] = geo_results
 
-        # 6. Visualization & Saving
-        # Load original image for resizing results back to original resolution
+       
         original_img_cv2 = cv2.imread(image_path)
         if original_img_cv2 is not None:
              # Convert BGR to RGB
             original_img_cv2 = cv2.cvtColor(original_img_cv2, cv2.COLOR_BGR2RGB)
             orig_h, orig_w = original_img_cv2.shape[:2]
         else:
-            # Fallback if load fails (shouldn't happen if exists)
-            # Use img_numpy (from preprocess) which might be resized or original depending on implementation
-            # In preprocess_image we return img_resized (512x512 usually) as second arg if load_image does that.
-            # But let's assume img_numpy here is what we have.
+        
             original_img_cv2 = img_numpy
             orig_h, orig_w = original_img_cv2.shape[:2]
 
@@ -344,8 +320,7 @@ class CrackAnalysisPipeline:
         # Draw Annotations
         try:
             if geo_results:
-                # --- 1. Smart Info Box ---
-                # Find corner with least crack pixels in binary_mask_orig
+              
                 h, w = binary_mask_orig.shape
                 mid_h, mid_w = h // 2, w // 2
 
@@ -365,8 +340,6 @@ class CrackAnalysisPipeline:
                 width_stats = geo_results.get('width_stats', {})
                 adv = geo_results.get('advanced', {})
 
-                # Prepare Classification Info
-                # class_name and class_conf are available from scope (line 282)
                 cat_info = f"Kat: {class_name} ({class_conf*100:.1f}%)"
 
                 lines = [
@@ -377,20 +350,8 @@ class CrackAnalysisPipeline:
                     f"Kretosc: {adv.get('tortuosity', 1.0):.3f}"
                 ]
 
-                # --- Dynamic Scaling Factor ---
-                # Base reference: 1000px.
-                # If image is small (e.g. 400px), scale should not be huge relative to it.
-                # Let's dampen the scale for smaller images.
+              
                 dim_max = max(h, w)
-
-                # Sqrt scaling gives better balance between small (400px) and large (4000px)
-                # scale = sqrt(dim_max / 1000)
-                # But simple linear with larger base also works.
-                # Previous 800 was producing huge text on small images?
-                # User said "on small images need smaller fonts".
-                # If image is 400px, 400/800 = 0.5. Font 0.3. Box 340*0.5 = 170.
-                # Maybe the issue is absolute size is okay but relative to image it blocks too much?
-                # Let's reduce base scale significantly.
 
                 viz_scale = dim_max / 1200.0
                 viz_scale = max(viz_scale, 0.35) # Allow smaller minimum scale

@@ -32,8 +32,7 @@ def predict_single(model, image_path, device, class_names):
     """
     model.eval()
 
-    # Manually loading image and applying transform
-    # (reusing get_transforms logic but manually since we don't have dataset object per se)
+    
     image = np.array(Image.open(image_path).convert('RGB'))
 
     transform = get_transforms(image_size=ENTRY_IMAGE_SIZE, is_training=False)
@@ -195,9 +194,8 @@ def main():
     class_names = ["no_crack", "crack"]
     model_path = f"{MODEL_DIR}/best_model.pth"
 
-    # Evaluate on Validation set
     print(f"\nLoading Validation set...")
-    # Using larger batch size implies more memory usage, keep consistent for benchmark
+    
     val_loader = dataloader_get(
         VAL_DIR, batch_size=ENTRY_BATCH_SIZE, is_training=False, num_workers=WORKERS)
 
