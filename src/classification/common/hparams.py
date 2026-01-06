@@ -37,11 +37,13 @@ except ImportError:
 
     UNET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
     UNET_MODEL_TRAIN_LOG_DIR = os.path.join(
-        PROJECT_ROOT, "models_log/segmentation/unet/")  # Adjusted to use PROJECT_ROOT
+        # Adjusted to use PROJECT_ROOT
+        PROJECT_ROOT, "assets/training_logs/segmentation/unet/")
 
     SEGFORMER_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
     SEGFORMER_MODEL_TRAIN_LOG_DIR = os.path.join(
-        PROJECT_ROOT, "models_log/segmentation/segformer/")  # Adjusted to use PROJECT_ROOT
+        # Adjusted to use PROJECT_ROOT
+        PROJECT_ROOT, "assets/training_logs/segmentation/segformer/")
 
     # Classification paths (updated)
     TRAIN_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/train/")
@@ -50,18 +52,22 @@ except ImportError:
 
     MODEL_DIR = os.path.join(PROJECT_ROOT, "models/")
     # Adjusted to use PROJECT_ROOT
-    LOG_DIR = os.path.join(PROJECT_ROOT, "models_log/entry_classificator/")
+    LOG_DIR = os.path.join(
+        PROJECT_ROOT, "assets/training_logs/entry_classificator/")
 
     # Updated to use MODEL_DIR or PROJECT_ROOT
-    ENET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
+    ENET_MODEL_TRAIN_DIR = os.path.join(
+        PROJECT_ROOT, "models/classification/efficienet/")
     ENET_MODEL_TRAIN_LOG_DIR = os.path.join(
         # Adjusted to use PROJECT_ROOT
-        PROJECT_ROOT, "models_log/classification/efficienet/")
+        PROJECT_ROOT, "assets/training_logs/classification/efficienet/")
 
     # Updated to use MODEL_DIR or PROJECT_ROOT
-    CONVNEXT_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
+    CONVNEXT_MODEL_TRAIN_DIR = os.path.join(
+        PROJECT_ROOT, "models/classification/convnext/")
     CONVNEXT_MODEL_TRAIN_LOG_DIR = os.path.join(
-        PROJECT_ROOT, "models_log/classification/convnext/")  # Adjusted to use PROJECT_ROOT
+        # Adjusted to use PROJECT_ROOT
+        PROJECT_ROOT, "assets/training_logs/classification/convnext/")
 
     DEVICE = "cuda"
     WORKERS = 4

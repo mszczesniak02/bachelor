@@ -1,3 +1,5 @@
+import os
+
 ON_COLAB = False
 
 if ON_COLAB:
@@ -18,8 +20,9 @@ else:
     TEST_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/test/")
     VAL_DIR = os.path.join(PROJECT_ROOT, "datasets/entry_dataset/val/")
 
-    MODEL_DIR = os.path.join(PROJECT_ROOT, "models/")
-    LOG_DIR = "../../../models_log/entry_classificator/"
+    MODEL_DIR = os.path.join(PROJECT_ROOT, "models/entry_classificator/")
+    LOG_DIR = os.path.join(
+        PROJECT_ROOT, "assets/training_logs/entry_classificator/")
     WORKERS = 4
 
 

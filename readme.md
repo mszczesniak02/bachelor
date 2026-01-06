@@ -1,6 +1,5 @@
 # System Analizy Pęknięć Powierzchni Budowlanych - Praca Inżynierska
-
-## Abstrakt
+## Streszczenie
 Praca przedstawia projekt i implementację zintegrowanego systemu analizy pęknięć powierzchni budowlanych, wykorzystującego metody komputerowego przetwarzania obrazu oraz uczenia maszynowego. Głównym celem pracy jest automatyzacja procesu inspekcji technicznej poprzez zastosowanie technik uczenia zespołowego (Ensemble Learning) w celu redukcji wariancji błędu pojedynczych estymatorów.
 
 Architektura systemu opiera się na czteroelementowym potoku przetwarzania:

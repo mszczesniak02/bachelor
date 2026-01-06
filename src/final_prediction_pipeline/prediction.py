@@ -11,8 +11,6 @@ from ultralytics import YOLO
 import segmentation_models_pytorch as smp               # preset model
 import torchvision.models as models
 
-#hparams
-#hparams
 from torch import cuda
 import os
 

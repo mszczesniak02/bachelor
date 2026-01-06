@@ -1,3 +1,5 @@
+import os
+
 ON_COLAB = False
 
 
@@ -34,11 +36,15 @@ else:
 
     YOLO_DATASET_DIR = os.path.join(PROJECT_ROOT, "datasets/yolo_seg_data")
 
-    UNET_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
-    UNET_MODEL_TRAIN_LOG_DIR = r"../../../models_log/segmentation/unet/"
+    UNET_MODEL_TRAIN_DIR = os.path.join(
+        PROJECT_ROOT, "models/segmentation/unet/")
+    UNET_MODEL_TRAIN_LOG_DIR = os.path.join(
+        PROJECT_ROOT, "assets/training_logs/segmentation/unet/")
 
-    SEGFORMER_MODEL_TRAIN_DIR = os.path.join(PROJECT_ROOT, "models/")
-    SEGFORMER_MODEL_TRAIN_LOG_DIR = r"../../../models_log/segmentation/segformer/"
+    SEGFORMER_MODEL_TRAIN_DIR = os.path.join(
+        PROJECT_ROOT, "models/segmentation/segformer/")
+    SEGFORMER_MODEL_TRAIN_LOG_DIR = os.path.join(
+        PROJECT_ROOT, "assets/training_logs/segmentation/segformer/")
 
     DEVICE = "cuda"
     WORKERS = 4

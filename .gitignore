@@ -7,3 +7,4 @@ assets/training_logs/*/
 .obsidian/  
 models/*.pt*
 datasets/*dataset*
+src/server/uploads
